@@ -7,11 +7,36 @@ sequence = sequence.replace("\n", "")
 motif = "CAG"
 count = sequence.count(motif)
 print(f"\nMotyw {motif} występuje {count} razy w sekwencji.")
+# likalizacja motywu w prostszy sposób,a poniżej z użyciem biblioteki:
+# pozycje = []
+# start = 0
+#
+# while True:
+#     idx = sekwencja.find(motyw, start)
+#     if idx == -1:
+#         break
+#     pozycje.append(idx + 1)
+#     start = idx + 1
+#
+# print(f"Motyw {motyw} występuje {len(pozycje)} razy.")
+# print("Pierwsze pozycje:", pozycje[:10])
 import re
 for m in re.finditer(motif, sequence.upper()):
     start = m.start() + 1
     end = m.end()
     print(f"Motyw {motif} na pozycji {start}-{end}")
+# Podział na segmenty w prostszy sposób i przy użyciu biblioteki poniżej:
+# k = 30
+# segments = []
+# for i in range(0, len(sequence), k):
+#     fragment = sequence[i:i+k]
+#     segments.append(fragment)
+#
+#
+# for numer, fragment in enumerate(segments, start=1):
+#     ile_razy = fragment.count(motif)
+#     print(f"Fragment {numer} ({len(fragment)} liter): {ile_razy} razy '{motif}'")
+
 import numpy as np
 segments = []
 k = 30
@@ -26,7 +51,7 @@ import matplotlib.pyplot as plt
 # Znajdź wszystkie pozycje wystąpień motywu
 positions = [m.start() + 1 for m in re.finditer(motif, sequence.upper())]
 
-# Tworzymy wykres słupkowy
+# Wykres słupkowy
 plt.figure(figsize=(100, 2))
 plt.bar(positions, [1]*len(positions), width=2, color='skyblue', edgecolor='black')
 
