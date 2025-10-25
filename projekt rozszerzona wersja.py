@@ -28,3 +28,18 @@ for motyw in motywy:
 
 for motyw, pozycje in wyniki.items():
     print(f"Motyw {motyw} występuje {len(pozycje)} razy na pozycjach: {pozycje[:10]}{'...' if len(pozycje) > 10 else ''}")
+# OK. Tworzenie wykresu wystepowania danych motywów
+import matplotlib.pyplot as plt
+kolory= {"CAG": "red", "ATG": "yellow", "CCC": "violet"}
+plt.figure(figsize=(12,2))
+plt.title("Motywy w sekwencji TP53")
+plt.xlabel("pozyccja nukleotydu")
+plt.yticks([])
+for motyw, pozycje in wyniki.items():
+    for pos in pozycje:
+        plt.plot([pos, pos+len(motyw)],[0, 0], color=kolory[motyw], linewidth=5)
+
+handles = [plt.Line2D([0],[0], color=kolory[m], lw=5) for m in motywy]
+plt.legend(handles, motywy)
+plt.show()
+print("wygenerowany wykres")
