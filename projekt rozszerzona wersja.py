@@ -43,3 +43,33 @@ handles = [plt.Line2D([0],[0], color=kolory[m], lw=5) for m in motywy]
 plt.legend(handles, motywy)
 plt.show()
 print("wygenerowany wykres")
+import plotly.graph_objects as go
+
+motywy = ["CAG", "ATG", "CCC"]
+kolory = {"CAG": "red", "ATG": "green", "CCC": "blue"}
+
+fig = go.Figure()
+
+for motyw in motywy:
+    pozycje = wyniki[motyw]
+    for pos in pozycje:
+        fig.add_trace(go.Scatter(
+            x=[pos, pos+len(motyw)],
+            y=[0, 0],
+            mode="lines",
+            line=dict(color=kolory[motyw], width=10),
+            name=motyw,
+            hovertemplate=f"Motyw: {motyw}<br>Pozycja: {pos}"
+        ))
+
+
+fig.update_yaxes(showticklabels=False)
+fig.update_layout(
+    title="Motywy w sekwencji TP53",
+    xaxis_title="Pozycja nukleotydu",
+    showlegend=True,
+    height=200
+)
+
+fig.show()
+print("wygenerowany wykres interaktywny")
