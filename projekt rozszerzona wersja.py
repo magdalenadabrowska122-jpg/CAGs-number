@@ -1,21 +1,27 @@
 from Bio import Entrez, SeqIO
-
+import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+import os
+from matplotlib.backends.backend_pdf import PdfPages
+import tkinter as tk
+from tkinter import filedialog, messagebox
 
 Entrez.email = "magdalenadabrowska122@gmail.com"
-# z NCBI pobrałam id geny TP53
-genbank_id = "NM_000546"
-a = Entrez.efetch(db="nucleotide", id=genbank_id, rettype="fasta", retmode="text")
-b = SeqIO.read(a, "fasta")
-a.close()
-print("ID rekordu:", b.id)
-print("Opis:", b.description)
-print("Pierwsze 50 nukleotydów:", b.seq[:50])
-print("Długość całej sekwencji:", len(b.seq))
-# Wyszukanie wielu motywów jednoczenie. Wybrałam motywy CAG, CCC, ATG
-motywy = ["CAG", "ATG", "CCC"]
-# Postaram się użyć słownika
-wyniki = {}
-for motyw in motywy:
+
+
+#Analiza sekwencji z NCBI
+def analiza_sekwencji(genbank_id, motyw):
+    # pobranie sekwencji
+    a = Entrez.efetch(db="nucleotide", id=genbank_id, rettype="fasta", retmode="text")
+    b = SeqIO.read(a, "fasta")
+    a.close()
+
+    print("ID rekordu:", b.id)
+    print("Opis:", b.description)
+    print("Pierwsze 50 nukleotydów:", b.seq[:50])
+    print("Długość całej sekwencji:", len(b.seq))
+
+    # Szukanie motywu
     pozycje = []
     start = 0
     while True:
@@ -24,52 +30,69 @@ for motyw in motywy:
             break
         pozycje.append(idx)
         start = idx + 1
-    wyniki[motyw] = pozycje
 
-for motyw, pozycje in wyniki.items():
-    print(f"Motyw {motyw} występuje {len(pozycje)} razy na pozycjach: {pozycje[:10]}{'...' if len(pozycje) > 10 else ''}")
-# OK. Tworzenie wykresu wystepowania danych motywów
-import matplotlib.pyplot as plt
-kolory= {"CAG": "red", "ATG": "yellow", "CCC": "violet"}
-plt.figure(figsize=(12,2))
-plt.title("Motywy w sekwencji TP53")
-plt.xlabel("pozyccja nukleotydu")
-plt.yticks([])
-for motyw, pozycje in wyniki.items():
-    for pos in pozycje:
-        plt.plot([pos, pos+len(motyw)],[0, 0], color=kolory[motyw], linewidth=5)
+    print(
+        f"\nMotyw {motyw} występuje {len(pozycje)} razy na pozycjach: {pozycje[:10]}{'...' if len(pozycje) > 10 else ''}")
 
-handles = [plt.Line2D([0],[0], color=kolory[m], lw=5) for m in motywy]
-plt.legend(handles, motywy)
-plt.show()
-print("wygenerowany wykres")
-import plotly.graph_objects as go
+    # Wykres matplotlib
+    fig, ax = plt.subplots(figsize=(12, 2))
+    ax.plot([pos for pos in pozycje], [0] * len(pozycje), 'ro', markersize=5)
+    ax.set_title(f"Motyw '{motyw}' w sekwencji {b.id}")
+    ax.set_xlabel("Pozycja nukleotydu")
+    ax.set_yticks([])
+    ax.grid(axis='x', linestyle='--', alpha=0.7)
 
-motywy = ["CAG", "ATG", "CCC"]
-kolory = {"CAG": "red", "ATG": "green", "CCC": "blue"}
+    pdf_filename = os.path.join(os.getcwd(), f"wykres_{b.id}_{motyw}.pdf")
+    from matplotlib.backends.backend_pdf import PdfPages
+    with PdfPages(pdf_filename) as pdf:
+        pdf.savefig(fig)
+    print(f"Plik PDF z wykresem zapisany! Sprawdź: {pdf_filename}")
+    plt.show()
 
-fig = go.Figure()
-
-for motyw in motywy:
-    pozycje = wyniki[motyw]
+    # Wykres interaktywny
+    fig = go.Figure()
     for pos in pozycje:
         fig.add_trace(go.Scatter(
-            x=[pos, pos+len(motyw)],
+            x=[pos, pos + len(motyw)],
             y=[0, 0],
             mode="lines",
-            line=dict(color=kolory[motyw], width=10),
+            line=dict(color="red", width=10),
             name=motyw,
             hovertemplate=f"Motyw: {motyw}<br>Pozycja: {pos}"
         ))
+    fig.update_yaxes(showticklabels=False)
+    fig.update_layout(
+        title=f"Motyw '{motyw}' w sekwencji {b.id}",
+        xaxis_title="Pozycja nukleotydu",
+        showlegend=True,
+        height=200
+    )
+    fig.show()
 
 
-fig.update_yaxes(showticklabels=False)
-fig.update_layout(
-    title="Motywy w sekwencji TP53",
-    xaxis_title="Pozycja nukleotydu",
-    showlegend=True,
-    height=200
-)
+#GUI
+def uruchom_analize():
+    genbank_id = pole_genbank.get().strip()
+    motyw = pole_motyw.get().upper().strip()
 
-fig.show()
-print("wygenerowany wykres interaktywny")
+    if not genbank_id or not motyw:
+        messagebox.showwarning("Brak danych", "Proszę wpisać GenBank ID i motyw DNA!")
+        return
+
+    analiza_sekwencji(genbank_id, motyw)
+
+
+okno = tk.Tk()
+okno.title("Analiza motywów DNA z NCBI")
+
+tk.Label(okno, text="GenBank ID:").pack()
+pole_genbank = tk.Entry(okno)
+pole_genbank.pack(pady=5)
+
+tk.Label(okno, text="Motyw DNA:").pack()
+pole_motyw = tk.Entry(okno)
+pole_motyw.pack(pady=5)
+
+tk.Button(okno, text="Rozpocznij analizę", command=uruchom_analize).pack(pady=10)
+
+okno.mainloop()

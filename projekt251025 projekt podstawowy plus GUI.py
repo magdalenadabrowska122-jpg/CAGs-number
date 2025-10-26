@@ -1,4 +1,4 @@
-def analiza_sekwencji(plik, motyw, ilosc=None):
+def analiza_sekwencji(plik, motyw, ilosc=None): # zmieniłam na definicje żeby współgrało z GUI
     import os
     import pandas as pd
     import re
@@ -79,7 +79,7 @@ def analiza_sekwencji(plik, motyw, ilosc=None):
 
 import tkinter as tk
 from tkinter import filedialog, messagebox
-
+# Początek GUI
 def wybierz_sekwencje():
     plik = filedialog.askopenfilename(
         title="Wybierz plik z sekwencją DNA",
