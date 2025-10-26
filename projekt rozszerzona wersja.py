@@ -10,7 +10,7 @@ from tkinter import filedialog, messagebox
 Entrez.email = "magdalenadabrowska122@gmail.com"
 
 
-#Analiza sekwencji z NCBI
+#Analiza wybranej sekwencji z NCBI
 def analiza_sekwencji(genbank_id, motyw):
     # pobranie sekwencji
     a = Entrez.efetch(db="nucleotide", id=genbank_id, rettype="fasta", retmode="text")
@@ -22,7 +22,7 @@ def analiza_sekwencji(genbank_id, motyw):
     print("Pierwsze 50 nukleotydów:", b.seq[:50])
     print("Długość całej sekwencji:", len(b.seq))
 
-    # Szukanie motywu
+    # Szukanie wybranego motywu np. CAG
     pozycje = []
     start = 0
     while True:
@@ -40,20 +40,20 @@ def analiza_sekwencji(genbank_id, motyw):
         messagebox.showinfo("Brak wyników", f"Motyw {motyw} nie został znaleziony w sekwencji.")
         return
 
-    # Wykres matplotlib
+    # Wykres matplotlib obrazujący występowanie wybranego motywu w wybranej z NCBI sekwencji
     fig, ax = plt.subplots(figsize=(12, 2))
     ax.plot([pos for pos in pozycje], [0] * len(pozycje), 'ro', markersize=5)
     ax.set_title(f"Motyw '{motyw}' w sekwencji {b.id}")
     ax.set_xlabel("Pozycja nukleotydu")
     ax.set_yticks([])
     ax.grid(axis='x', linestyle='--', alpha=0.7)
-
+# Zapisywanie wykresu do pdf
     pdf_filename = os.path.join(os.getcwd(), f"wykres_{b.id}_{motyw}.pdf")
     with PdfPages(pdf_filename) as pdf:
         pdf.savefig(fig)
     print(f"Plik PDF z wykresem zapisany! Sprawdź: {pdf_filename}")
     plt.show()
-
+# Zapisywanie wykresu do csv
     csv_filename1 = os.path.join(os.getcwd(), f"pozycje_{b.id}_{motyw}.csv")
     pd.DataFrame({"Pozycja": pozycje}).to_csv(csv_filename1, index=False, sep=';')
     print(f"Plik CSV zapisany! Sprawdź: {csv_filename1}")
@@ -79,7 +79,7 @@ def analiza_sekwencji(genbank_id, motyw):
     fig.show()
 
 
-#GUI
+#Tworzenie GUI
 def uruchom_analize():
     genbank_id = pole_genbank.get().strip()
     motyw = pole_motyw.get().upper().strip()
