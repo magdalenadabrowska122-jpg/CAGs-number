@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d22e7923-37a5-452d-a947-a6db33b4004d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/CAGs-number.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CAGs-number.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/projekt251025.py" beforeDir="false" afterPath="$PROJECT_DIR$/projekt251025.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wyniki.csv" beforeDir="false" afterPath="$PROJECT_DIR$/wyniki.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +30,8 @@
   &quot;keyToString&quot;: {
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;Python.projekt rozszerzona wersja.executor&quot;: &quot;Run&quot;,
-    &quot;Python.projekt251025.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.projekt251025 projekt podstawowy plus GUI.executor&quot;: &quot;Run&quot;,
+    &quot;Python.projekt251025.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,

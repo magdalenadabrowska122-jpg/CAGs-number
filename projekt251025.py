@@ -57,18 +57,18 @@ plt.bar(positions, [1]*len(positions), width=2, color='skyblue', edgecolor='blac
 
 # Opisy osi i tytuł
 plt.xlabel("Pozycja w sekwencji (nt)")
-plt.ylabel("Motyw obecny")
+plt.ylabel("Motyw obecny w sekwencji")
 plt.title(f"Rozmieszczenie motywu '{motif}' w sekwencji")
-plt.yticks([])  # ukrywamy oś Y, bo nie niesie informacji
-plt.grid(axis='x', linestyle='--', alpha=0.5)
+plt.yticks([])  # ukrywamy oś Y, bo nie chcemy jej nazywać. Nic nie wniesie.
+plt.grid(axis='x', linestyle='--', alpha=0.7)
 plt.show()
-segment_size = k
+
 df = pd.DataFrame({
     "Position": positions,
-    "Segment": [p // segment_size + 1 for p in positions]
+    "Segment": [p // k + 1 for p in positions]
 })
 
 # zapis do CSV
 csv_filename = os.path.join(os.getcwd(), "wyniki.csv")
-df.to_csv(csv_filename, index=False, sep=';')  # średnik dla Excela
+df.to_csv(csv_filename, index=False, sep=';')  # średnik dla Excela żeby rozdzielić to na dwie kolumny
 print(f"Plik zapisany! Sprawdź: {os.path.abspath(csv_filename)}")
