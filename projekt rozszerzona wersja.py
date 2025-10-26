@@ -2,6 +2,7 @@ from Bio import Entrez, SeqIO
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import os
+import pandas as pd
 from matplotlib.backends.backend_pdf import PdfPages
 import tkinter as tk
 from tkinter import filedialog, messagebox
@@ -33,6 +34,11 @@ def analiza_sekwencji(genbank_id, motyw):
 
     print(
         f"\nMotyw {motyw} występuje {len(pozycje)} razy na pozycjach: {pozycje[:10]}{'...' if len(pozycje) > 10 else ''}")
+# Zabezpieczenie przed brakiem potencjlanego wyniku
+    if not pozycje:
+        print(f"Motyw {motyw} nie występuje w sekwencji!")
+        messagebox.showinfo("Brak wyników", f"Motyw {motyw} nie został znaleziony w sekwencji.")
+        return
 
     # Wykres matplotlib
     fig, ax = plt.subplots(figsize=(12, 2))
@@ -43,11 +49,14 @@ def analiza_sekwencji(genbank_id, motyw):
     ax.grid(axis='x', linestyle='--', alpha=0.7)
 
     pdf_filename = os.path.join(os.getcwd(), f"wykres_{b.id}_{motyw}.pdf")
-    from matplotlib.backends.backend_pdf import PdfPages
     with PdfPages(pdf_filename) as pdf:
         pdf.savefig(fig)
     print(f"Plik PDF z wykresem zapisany! Sprawdź: {pdf_filename}")
     plt.show()
+
+    csv_filename1 = os.path.join(os.getcwd(), f"pozycje_{b.id}_{motyw}.csv")
+    pd.DataFrame({"Pozycja": pozycje}).to_csv(csv_filename1, index=False, sep=';')
+    print(f"Plik CSV zapisany! Sprawdź: {csv_filename1}")
 
     # Wykres interaktywny
     fig = go.Figure()
