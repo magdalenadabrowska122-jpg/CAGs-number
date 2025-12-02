@@ -12,13 +12,13 @@ print(f"\nMotyw {motif} występuje {count} razy w sekwencji.")
 # start = 0
 #
 # while True:
-#     idx = sekwencja.find(motyw, start)
+#     idx = sequence.find(motif, start)
 #     if idx == -1:
 #         break
 #     pozycje.append(idx + 1)
 #     start = idx + 1
 #
-# print(f"Motyw {motyw} występuje {len(pozycje)} razy.")
+# print(f"Motyw {motif} występuje {len(pozycje)} razy.")
 # print("Pierwsze pozycje:", pozycje[:10])
 import re
 for m in re.finditer(motif, sequence.upper()):
