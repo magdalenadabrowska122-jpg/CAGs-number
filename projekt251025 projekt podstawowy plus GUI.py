@@ -54,6 +54,8 @@ def analiza_sekwencji(plik, motyw, ilosc=None): # zmieniłam na definicje żeby 
 
     # Znajdź wszystkie pozycje wystąpień motywu
     positions = [m.start() + 1 for m in re.finditer(motyw, sequence.upper())]
+    if ilosc is not None:
+        positions = positions[:ilosc]
 
     # Wykres słupkowy
     plt.figure(figsize=(100, 2))
