@@ -55,6 +55,12 @@ def analiza_sekwencji(plik, motyw, ilosc=None): # zmieniłam na definicje żeby 
     # Znajdź wszystkie pozycje wystąpień motywu
     positions = [m.start() + 1 for m in re.finditer(motyw, sequence.upper())]
     if ilosc is not None:
+        if ilosc > len(positions):
+            print(
+                f"Motyw {motyw} występuje tylko {len(positions)} razy, nie można analizować {ilosc} pierwszych wystąpień!")
+            messagebox.showwarning("Za duża liczba",
+                                   f"Motyw {motyw} występuje tylko {len(positions)} razy, nie można analizować {ilosc} pierwszych wystąpień!")
+            return
         positions = positions[:ilosc]
 
     # Wykres słupkowy
