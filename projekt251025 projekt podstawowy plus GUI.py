@@ -75,7 +75,7 @@ def analiza_sekwencji(plik, motyw, ilosc=None): # zmieniłam na definicje żeby 
     })
 
     # zapis do CSV
-    csv_filename = os.path.join(os.getcwd(), "wyniki.csv")
+    csv_filename = os.path.join(os.path.expanduser('~'), 'Desktop', 'wyniki.csv')
     df.to_csv(csv_filename, index=False, sep=';')  # średnik dla Excela żeby rozdzielić to na dwie kolumny
     print(f"Plik zapisany! Sprawdź: {os.path.abspath(csv_filename)}")
 
